@@ -1,0 +1,16 @@
+<html>
+
+<body>
+    <h1><a href="/">This is Main Page</a></h1>
+    <ol>
+        {% for topic in topics%}
+        <li><a href="/read/{{topic[0]}}">{{topic[1]}}</a></li>
+        {% endfor %}
+    </ol>
+    {% block content %}{% endblock %}
+    <ul>
+        <li><a href="/create">create</a></li>
+    </ul>
+</body>
+
+</html>

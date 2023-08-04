@@ -1,0 +1,19 @@
+<html>
+
+<body>
+    <form action="/search">
+        <input type="search" name="query">
+    </form>
+    <h1><a href="/">Move to Main Page</a></h1>
+    <ol>
+        {% for topic in topics %}
+        <li><a href="/read/{{topic[0]}}">{{topic[1]}}</a></li>
+        {% endfor %}
+    </ol>
+    {%block content%}{%endblock%}
+    <ul>
+        <li><a href="/create">create data</a></li>
+    </ul>
+</body>
+
+</html>

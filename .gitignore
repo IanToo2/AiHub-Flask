@@ -1,0 +1,4 @@
+# 불필요한 pycache 파일들
+__pycache__/
+# db 정보
+config.json
