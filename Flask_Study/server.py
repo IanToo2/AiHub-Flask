@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect
+
 import psycopg2
 from pgvector.psycopg2 import register_vector
+
 import openai
 import numpy as np
 
