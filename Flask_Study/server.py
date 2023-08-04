@@ -17,19 +17,23 @@ topics = []
 
 register_vector(cursor)
 
+# db 값 읽어오는 함수
 def check_data():
     cursor.execute("SELECT id, title, body FROM topics")
     topics = cursor.fetchall()
     return topics
 
+# Main page
 @app.route("/")
 def init():
     return render_template('index.html', topics = check_data())
 
+# Create Page
 @app.route("/create")
 def create():
     return render_template('create.html', topics = check_data())
 
+# Create function
 @app.route("/create_process", methods=['POST'])
 def create_process():
     title = request.form["title"]
@@ -46,6 +50,7 @@ def create_process():
 
     return redirect('/')
 
+# Read Page
 @app.route("/read/<int:id>")
 def read(id):
     selected = None
@@ -58,4 +63,5 @@ def read(id):
     
     return render_template('read.html', topics=topics, topic=selected)
 
+# Debug On
 app.run(debug=True)
