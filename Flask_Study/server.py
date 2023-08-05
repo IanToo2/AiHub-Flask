@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, send_from_directory
 
 import psycopg2
 from pgvector.psycopg2 import register_vector
