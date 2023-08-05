@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, send_from_directory
+from flask import Flask, render_template, request, redirect, jsonify
 
 import psycopg2
 from pgvector.psycopg2 import register_vector
@@ -10,12 +10,15 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
 
-# TensorFlow Hub에서 사전 훈련된 USE(Universal Sentence Encoder) 모델 로드
-embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
 # db 접속 함수
 from connect_to_db import get_database_connection
 
 app = Flask(__name__)
+
+# TensorFlow Hub에서 사전 훈련된 USE(Universal Sentence Encoder) 모델 로드
+embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+app.embed_model = embed
+
 
 conn = get_database_connection()
 cursor = conn.cursor()
@@ -33,8 +36,11 @@ def check_data():
 # Tensorflow로 데이터 벡터화 함수
 def embed_text(title, body):
 
+    # 전역 변수에 미리 로드한 모델을 가져오기
+    embed = app.embed_model
     # 텍스트를 벡터화하여 embeddings 변수에 저장
     input_text = [f"title:{title}", f"body:{body}"]
+    print(input_text)
     embeddings = embed(input_text)
 
     # Numpy 배열로 변환
