@@ -6,8 +6,12 @@ from pgvector.psycopg2 import register_vector
 import openai
 import numpy as np
 
+# tensorflow 
 import tensorflow as tf
 import tensorflow_hub as hub
+
+# TensorFlow Hub에서 사전 훈련된 USE(Universal Sentence Encoder) 모델 로드
+embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
 # db 접속 함수
 from connect_to_db import get_database_connection
 
@@ -28,8 +32,6 @@ def check_data():
 
 # Tensorflow로 데이터 벡터화 함수
 def embed_text(title, body):
-    # TensorFlow Hub에서 사전 훈련된 USE(Universal Sentence Encoder) 모델 로드
-    embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
 
     # 텍스트를 벡터화하여 embeddings 변수에 저장
     input_text = [f"title:{title}", f"body:{body}"]
