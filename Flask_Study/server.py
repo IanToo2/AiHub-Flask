@@ -3,23 +3,16 @@ from flask import Flask, render_template, request, redirect, jsonify
 import psycopg2
 from pgvector.psycopg2 import register_vector
 
-import openai
 import numpy as np
-
-# tensorflow 
-import tensorflow as tf
-import tensorflow_hub as hub
+import json
 
 # db 접속 함수
 from connect_to_db import get_database_connection
+print("import 끝")
 
 app = Flask(__name__)
 
-# TensorFlow Hub에서 사전 훈련된 USE(Universal Sentence Encoder) 모델 로드
-embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
-app.embed_model = embed
-
-
+# DB conn 생성
 conn = get_database_connection()
 cursor = conn.cursor()
 
@@ -27,6 +20,7 @@ topics = []
 
 register_vector(cursor)
 
+print("서버 로딩 완료!!!")
 # db 값 읽어오는 함수
 def check_data():
     cursor.execute("SELECT id, title, body FROM topics")
@@ -61,22 +55,13 @@ def create():
 # Create function
 @app.route("/create_process", methods=['POST'])
 def create_process():
-    # 웹으로 부터 값 가져오기
+    # form으로부터 값 가져오기
     title = request.form["title"]
     body = request.form["body"]
 
-    ## openai로 Embedding 처리
-    ## 지금은 api key가 만료되어 사용 불가
-    # response = openai.Embedding.create(
-    #     input=f'''title:{title}\n\nbody:{body}''',
-    #     model="text-embedding-ada-002"
-    # )
-    # embeddings = np.array(response['data'][0]['embedding'])
-    embeddings = embed_text(title, body)
     # DB에 저장
-    print("title = {}\n body = {}".format(title, body))
-    print("embeddings data = {}".format(embeddings))
-    cursor.execute('INSERT INTO topics (title, body, embedding) VALUES(%s, %s, %s)', (title, body, embeddings))
+ 
+    cursor.execute('INSERT INTO topics (title, body) VALUES(%s, %s)', (title, body))
     conn.commit()
 
     return redirect('/')
